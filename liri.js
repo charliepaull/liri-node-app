@@ -23,24 +23,25 @@ spotify.search({type:"track", query: userSearch, limit: 3}, function(err, data){
     if (err){
         return console.log("Error occured + err");
     }
-    console.log(data.tracks.items);
+    console.log(data.tracks.items[0].album);
     // console.log(JSON.stringify(data[0]));
 });
 };
 
 // begin Axios
 // Axios for OMDB
-// var movieName = userSearch
-// // queryURL has OMDB api key
-// var queryURL1 = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-// // console.log(queryURL1)
-// // create axios object get request
-// axios.get(queryURL1).then(
-//     // callback function to get response
-//     function(response) {
-//         console.log(response.data)
-//     }
-// );
+// queryURL has OMDB api key
+function findMovie(userSearch){
+var queryURL1 = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy";
+// console.log(queryURL1)
+// create axios object get request
+axios.get(queryURL1).then(
+    // callback function to get response
+    function(response) {
+        console.log(response.data)
+    }
+);
+};
 
 // BandsInTown Axios
 function findConcert(userSearch){
