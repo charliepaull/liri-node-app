@@ -17,6 +17,8 @@ var command = process.argv[2];
 // use to format & join into a string from each user input after process.argv[2]
 var userSearch = process.argv.slice(3).join(" ");
 
+var fs = require("fs")
+
 function spotifySong(userSearch){
 // start Spotify request
 spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
@@ -42,6 +44,25 @@ spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
     //     // album name
     //     console.log("Album Name: Paradise Theatre");
     // }
+    if (command === "do-what-it-says"){
+        fs.readFile("random.txt", "utf8", function(error, data) {
+            // If the code experiences any errors it will log the error to the console.
+            if (error) {
+            return console.log(error);
+            }
+
+            // We will then print the contents of data
+            console.log("Artist: " + data.tracks.items[0].artists[0].name);
+            // song name
+            console.log("Song Name: " + data.tracks.items[0].name);
+            // preview link of the song from Spotify
+            console.log("Link: " + data.tracks.items[0].external_urls.spotify);
+            // album name
+            console.log("Album Name: " + data.tracks.items[0].album.name);
+
+        });
+        
+            else {
         // artist(s)
         console.log("Artist: " + data.tracks.items[0].artists[0].name);
         // song name
@@ -50,7 +71,10 @@ spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
         console.log("Link: " + data.tracks.items[0].external_urls.spotify);
         // album name
         console.log("Album Name: " + data.tracks.items[0].album.name);
-    });
+        }
+    };
+
+});
 
 
 // begin Axios
@@ -158,9 +182,9 @@ switch (command){
     break;
 
     case "do-what-it-says":
-    console.log("Nothing there");
+    readFile();
+    console.log("Read file");
     break;
 
     default: console.log("Nothing entered");
-};
 };
