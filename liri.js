@@ -21,10 +21,27 @@ function spotifySong(userSearch){
 // start Spotify request
 spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
     if (err){
-        return console.log("Error occured + err");
+        // Styx
+        console.log("Artist: Styx");
+        // Too Much Time on My Hands
+        console.log("Song Name: Too Much Time on My Hands");
+        // preview link of the song from Spotify
+        console.log("Link: https://open.spotify.com/album/6PhLTeuN0G894bdSBTCwUF");
+        // album name
+        console.log("Album Name: Paradise Theatre");
     }
     // console.log(data.tracks.items[0]);
-    // Here, add these points from the response object:
+    // Here, add these points from the response object
+    // if (userSearch === ""){
+    //     // Styx
+    //     console.log("Artist: Styx");
+    //     // Too Much Time on My Hands
+    //     console.log("Song Name: Too Much Time on My Hands");
+    //     // preview link of the song from Spotify
+    //     console.log("Link: https://open.spotify.com/album/6PhLTeuN0G894bdSBTCwUF");
+    //     // album name
+    //     console.log("Album Name: Paradise Theatre");
+    // }
         // artist(s)
         console.log("Artist: " + data.tracks.items[0].artists[0].name);
         // song name
@@ -33,9 +50,8 @@ spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
         console.log("Link: " + data.tracks.items[0].external_urls.spotify);
         // album name
         console.log("Album Name: " + data.tracks.items[0].album.name);
-    // console.log(JSON.stringify(data[0]));
-});
-};
+    });
+
 
 // begin Axios
 // Axios for OMDB
@@ -47,6 +63,26 @@ var queryURL1 = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apik
 axios.get(queryURL1).then(
     // callback function to get response
     function(response) {
+        if (userSearch === ""){
+            // Styx
+            console.log("Title: Mr. Nobody");
+            // Too Much Time on My Hands
+            console.log("Year Released: 2009");
+            // preview link of the song from Spotify
+            console.log("IMDB Rating: 7.9");
+            // album name
+            console.log("Rotten Tomatoes rating: 67%");
+            // country where movie was produced
+            console.log("Country: Belgium, Germany, Canada, France, USA, UK")
+        // language of the movie
+            console.log("Language: English, Mohawk");
+            // plot 
+            console.log("Plot: A boy stands on a station platform as a train is about to leave.\nShould he go with his mother or stay with his father? Infinite possibilities arise from this decision.\nAs long as he doesn't choose, anything is possible.");
+            // actors
+            console.log("Actors: Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham");
+            }
+
+        else{
         // console.log(response.data)
     // Here, add these points from the response object
         // title of the movie
@@ -65,6 +101,7 @@ axios.get(queryURL1).then(
         console.log("Plot: " + response.data.Plot);
         // actors
         console.log("Actors: " + response.data.Actors);
+    }
     }
 );
 };
@@ -86,6 +123,7 @@ function findConcert(userSearch){
             // var locationArr = [];
             var city = console.log(response.data[0].venue.city);
             var state = console.log(response.data[0].venue.region);
+            var country = console.log(response.data[0].venue.country);
             // locationArr.push(city, state);
             // console.log(locationArr);
             // Event Date (using mm/dd/yyyy)
@@ -106,18 +144,17 @@ function findConcert(userSearch){
 switch (command){
     case "concert-this":
     findConcert(userSearch);
-    console.log("Concert ");
+    console.log("Concert Info: ");
     break;
 
     case "spotify-this-song":
     spotifySong(userSearch);
-    console.log("What song is this?");
+    console.log("Song Info: ");
     break;
 
     case "movie-this":
     findMovie(userSearch);
-    console.log("Movie stats")
-    // movieInfo();
+    console.log("Movie Info: ")
     break;
 
     case "do-what-it-says":
@@ -125,4 +162,5 @@ switch (command){
     break;
 
     default: console.log("Nothing entered");
+};
 };
