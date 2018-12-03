@@ -5,8 +5,7 @@ This is Liri. She is a functional application that takes in command line argumen
 Liri returns information regarding concerts, movies, and songs from Spotify. 
 
 Steps: 
-    * The user decides if he or she would like to learn more about current concerts, past & present movies, or songs from Spotify. 
-    ---------------------------------------------------------------
+    The user decides if he or she would like to learn more about current concerts, past & present movies, or songs from Spotify. 
 
     The user must use the following commands in the terminal:
         * The first argument must be 'node.'
