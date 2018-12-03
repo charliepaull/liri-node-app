@@ -1,7 +1,6 @@
 // push into liri.js the .env folder with
 // only my local ID & SECRET keys
 require("dotenv").config();
-
 // used to trigger and require Axios for this file
 // module already installed
 var axios = require("axios");
@@ -16,148 +15,137 @@ var spotify = new Spotify(keys.spotify);
 var command = process.argv[2];
 // use to format & join into a string from each user input after process.argv[2]
 var userSearch = process.argv.slice(3).join(" ");
+// require moment npm package (used for mm/dd/yyyy)
+var moment = require("moment");
+// require fs package (used to read random.txt file)
+var fs = require("fs");
+var divider = "\n------------------------------\n";
 
-var fs = require("fs")
+function readRandom(){
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+          return console.log(error);
+        }
+        // We will then print the contents of data
+        var dataArr = data.split(",");
+        var readCommand = (dataArr[0]);
+        var songArr = (dataArr[1]);
+        command = readCommand;
+        userSearch = songArr;
+        // console.log(dataArr);
+        // line above console.logs correctly: I Want it That Way
+        spotifySong(userSearch);
+});
+};
 
 function spotifySong(userSearch){
-    console.log('spotify is working');
 // start Spotify request
-    spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
-    // if (err){
-    //     // Styx
-    //     console.log("Artist: Styx");
-    //     // Too Much Time on My Hands
-    //     console.log("Song Name: Too Much Time on My Hands");
-    //     // preview link of the song from Spotify
-    //     console.log("Link: https://open.spotify.com/album/6PhLTeuN0G894bdSBTCwUF");
-    //     // album name
-    //     console.log("Album Name: Paradise Theatre");
-    // }
+    if (command = "spotify-this-song"){
+    }
 
-    if (command === "do-what-it-says"){
-        fs.readFile("random.txt", "utf8", function(error, data) {
-            // If the code experiences any errors it will log the error to the console.
-            if (error) {
-            return console.log(error);
-            }
-
-            // have to concert this from a string in the .txt file to process.argv
-
-            // We will then print the contents of data
-            console.log("Artist: " + data.tracks.items[0].artists[0].name);
-            // song name
-            console.log("Song Name: " + data.tracks.items[0].name);
-            // preview link of the song from Spotify
-            console.log("Link: " + data.tracks.items[0].external_urls.spotify);
-            // album name
-            console.log("Album Name: " + data.tracks.items[0].album.name);
-
-        });
-    
-        // artist(s2)
-        console.log("Artist: " + data.tracks.items[0].artists[0].name);
+    if (!userSearch){
+        userSearch = "Too Much Time on My Hands"
+    }
+spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
+    if (err){
+        return console.log("Error occured + err");
+    }
+    // Here, add these points from the response object:
+        // artist(s)
+        var songArtist = "Artist: " + data.tracks.items[0].artists[0].name;
         // song name
-        console.log("Song Name: " + data.tracks.items[0].name);
+        var songName = "Song Name: " + data.tracks.items[0].name;
         // preview link of the song from Spotify
-        console.log("Link: " + data.tracks.items[0].external_urls.spotify);
+        var link = "Link: " + data.tracks.items[0].external_urls.spotify;
         // album name
-        console.log("Album Name: " + data.tracks.items[0].album.name);
-        
-    };
-    
-});
+        var albumName = "Album Name: " + data.tracks.items[0].album.name;
 
+        for (x in data){
+            console.log(songArtist, divider, songName, divider,
+                link, divider, albumName, divider);
+            return;
+        }
+});
+};
 
 // begin Axios
 // Axios for OMDB
 // queryURL has OMDB api key
+
 function findMovie(userSearch){
-    console.log(userSearch);
+    if (!userSearch){
+        userSearch = "Blazing Saddles"
+    }
 var queryURL1 = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy";
-console.log(queryURL1)
+// console.log(queryURL1)
 // create axios object get request
 axios.get(queryURL1).then(
     // callback function to get response
     function(response) {
-        if (userSearch === ""){
-            // Movie
-            console.log("Title: Mr. Nobody");
-            // Too Much Time on My Hands
-            console.log("Year Released: 2009");
-            // preview link of the song from Spotify
-            console.log("IMDB Rating: 7.9");
-            // album name
-            console.log("Rotten Tomatoes rating: 67%");
-            // country where movie was produced
-            console.log("Country: Belgium, Germany, Canada, France, USA, UK")
-        // language of the movie
-            console.log("Language: English, Mohawk");
-            // plot 
-            console.log("Plot: A boy stands on a station platform as a train is about to leave.\nShould he go with his mother or stay with his father? Infinite possibilities arise from this decision.\nAs long as he doesn't choose, anything is possible.");
-            // actors
-            console.log("Actors: Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham");
-            }
-
-        else{
         // console.log(response.data)
     // Here, add these points from the response object
         // title of the movie
-        console.log("Title: " + response.data.Title);
+        var title = "Title: " + response.data.Title;
         // year movie was released
-        console.log("Year Released: " + response.data.Year);
+        var releaseYear = "Year Released: " + response.data.Year;
         // imdb rating
-        console.log("IMDB Rating: " + response.data.imdbRating);
+        var imdb = "IMDB Rating: " + response.data.imdbRating;
         // rotten tomatoes rating
-        console.log("Rotten Tomatoes rating: " + response.data.Ratings[1].Value)
+        var rtRating = "Rotten Tomatoes rating: " + response.data.Ratings[1].Value;
         // country where movie was produced
-        console.log("Country: " + response.data.Country)
+        var country = "Country: " + response.data.Country;
         // language of the movie
-        console.log("Language: " + response.data.Language);
+        var language = "Language: " + response.data.Language;
         // plot 
-        console.log("Plot: " + response.data.Plot);
+        var plot = "Plot: " + response.data.Plot;
         // actors
-        console.log("Actors: " + response.data.Actors);
-    }
+        var actors = "Actors: " + response.data.Actors;
+
+         for (x in response){
+            console.log(title, divider, releaseYear, divider, imdb, divider, 
+            rtRating, divider, country, divider, language, divider,
+            plot, divider, actors);
+            return;
+        }
     }
 );
 };
 
 // BandsInTown Axios
 function findConcert(userSearch){
-    console.log("find concert");
+    if (!userSearch){
+        console.log(divider,"Go find yourself a Nickleback concert, you dweeb.");
+        return
+    }
     // bandsintown queryURL/api
     var QueryURL2 = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
     axios.get(QueryURL2).then(
         function(response){
-            // console.log(response)
-            // console.log(response.data[0])
-        // Here, add these points from the response object:
-            // Artist name
-            console.log("Artist: " + response.data[0].lineup[0])
+            // console.log(response.data[0]);
+        // // Here, add these points from the response object:
+        //     // Artist name
+            var concertArt = "Artist: " + response.data[0].lineup[0];
             // Venue Name
-            console.log("Venue: " + response.data[0].venue.name)
+            var venue = "Venue: " + response.data[0].venue.name;
             // Venue location
-            // var locationArr = [];
-            var city = console.log(response.data[0].venue.city);
-            var state = console.log(response.data[0].venue.region);
-            var country = console.log(response.data[0].venue.country);
-            // locationArr.push(city, state);
-            // console.log(locationArr);
+            var city = "City: " + (response.data[0].venue.city);
+            var state = "State: " + (response.data[0].venue.region);
             // Event Date (using mm/dd/yyyy)
-            // var date = (moment(new Date()).format("DD/MM/YYYY").response.data[0].datetime);
-            // console.log(date);
-            // var d = new Date("2019-05-03T12:00:00"); 
-            // console.log(d.toLocaleString()); 
+            var date = response.data[0].datetime;
+            date = "Date: " + moment(new Date()).format("DD/MM/YYYY");
+            
+            for (x in response){
+                console.log(concertArt, divider, venue, divider, city,
+                    divider, state, divider, date, divider);
+                return
+            }
         }
     );
 
 };
 
-
-if (command === 'movie-this') {
-    console.log('find movie test');
-    findMovie(userSearch);
-}
 // // logic of 4 possible commands:
 //     // concert-this
 //     // spotify-this-song
@@ -167,24 +155,23 @@ if (command === 'movie-this') {
 switch (command){
     case "concert-this":
     findConcert(userSearch);
-    console.log("Concert Info: ");
+    console.log("Concert details: ");
     break;
 
     case "spotify-this-song":
     spotifySong(userSearch);
-    console.log("Song Info: ");
+    console.log("Song info: ");
     break;
 
     case "movie-this":
     findMovie(userSearch);
-    console.log("Movie Info: ")
+    console.log("Movie info: ")
     break;
 
     case "do-what-it-says":
-    spotifySong();
-    console.log("Read file");
+    readRandom();
+    console.log("The song is...");
     break;
 
-    default: console.log("Nothing entered");
-}};
-
+    default: console.log("Enter a command.");
+};
