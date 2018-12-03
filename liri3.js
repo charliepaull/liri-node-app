@@ -1,7 +1,6 @@
 // push into liri.js the .env folder with
 // only my local ID & SECRET keys
 require("dotenv").config();
-
 // used to trigger and require Axios for this file
 // module already installed
 var axios = require("axios");
@@ -16,11 +15,34 @@ var spotify = new Spotify(keys.spotify);
 var command = process.argv[2];
 // use to format & join into a string from each user input after process.argv[2]
 var userSearch = process.argv.slice(3).join(" ");
-
+// require moment npm package (used for mm/dd/yyyy)
 var moment = require("moment");
+// require fs package (used to read random.txt file)
+var fs = require("fs");
+var divider = "\n------------------------------\n";
+
+function readRandom(){
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+          return console.log(error);
+        }
+        // We will then print the contents of data
+        var dataArr = data.split(",");
+        dataArr = (dataArr[1]);
+        userSearch = dataArr;
+        // console.log(dataArr);
+        return;
+});
+};
 
 function spotifySong(userSearch){
 // start Spotify request
+    if (command = "do-what-it-says"){
+        readRandom();
+    }
+
     if (!userSearch){
         userSearch = "Too Much Time on My Hands"
     }
@@ -30,14 +52,19 @@ spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
     }
     // Here, add these points from the response object:
         // artist(s)
-        console.log("Artist: " + data.tracks.items[0].artists[0].name);
+        var songArtist = "Artist: " + data.tracks.items[0].artists[0].name;
         // song name
-        console.log("Song Name: " + data.tracks.items[0].name);
+        var songName = "Song Name: " + data.tracks.items[0].name;
         // preview link of the song from Spotify
-        console.log("Link: " + data.tracks.items[0].external_urls.spotify);
+        var link = "Link: " + data.tracks.items[0].external_urls.spotify;
         // album name
-        console.log("Album Name: " + data.tracks.items[0].album.name);
-        console.log("")
+        var albumName = "Album Name: " + data.tracks.items[0].album.name;
+
+        for (x in data){
+            console.log(songArtist, divider, songName, divider,
+                link, divider, albumName, divider);
+            return;
+        }
 });
 };
 
@@ -47,7 +74,7 @@ spotify.search({type:"track", query: userSearch, limit: 1}, function(err, data){
 
 function findMovie(userSearch){
     if (!userSearch){
-        userSearch = "Mr. Nobody"
+        userSearch = "Blazing Saddles"
     }
 var queryURL1 = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy";
 // console.log(queryURL1)
@@ -58,21 +85,28 @@ axios.get(queryURL1).then(
         // console.log(response.data)
     // Here, add these points from the response object
         // title of the movie
-        console.log("Title: " + response.data.Title);
+        var title = "Title: " + response.data.Title;
         // year movie was released
-        console.log("Year Released: " + response.data.Year);
+        var releaseYear = "Year Released: " + response.data.Year;
         // imdb rating
-        console.log("IMDB Rating: " + response.data.imdbRating);
+        var imdb = "IMDB Rating: " + response.data.imdbRating;
         // rotten tomatoes rating
-        console.log("Rotten Tomatoes rating: " + response.data.Ratings[1].Value)
+        var rtRating = "Rotten Tomatoes rating: " + response.data.Ratings[1].Value;
         // country where movie was produced
-        console.log("Country: " + response.data.Country)
+        var country = "Country: " + response.data.Country;
         // language of the movie
-        console.log("Language: " + response.data.Language);
+        var language = "Language: " + response.data.Language;
         // plot 
-        console.log("Plot: " + response.data.Plot);
+        var plot = "Plot: " + response.data.Plot;
         // actors
-        console.log("Actors: " + response.data.Actors);
+        var actors = "Actors: " + response.data.Actors;
+
+         for (x in response){
+            console.log(title, divider, releaseYear, divider, imdb, divider, 
+            rtRating, divider, country, divider, language, divider,
+            plot, divider, actors);
+            return;
+        }
     }
 );
 };
@@ -87,23 +121,24 @@ function findConcert(userSearch){
     var QueryURL2 = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
     axios.get(QueryURL2).then(
         function(response){
-            // console.log(response)
-            // console.log(response.data[0])
+            console.log(response.data[0])
         // Here, add these points from the response object:
             // Artist name
-            console.log("Artist: " + response.data[0].lineup[0])
+            var concertArt = "Artist: " + response.data[0].lineup[0];
             // Venue Name
-            console.log("Venue: " + response.data[0].venue.name)
+            var venue = "Venue: " + response.data[0].venue.name;
             // Venue location
-            // var locationArr = [];
             var city = console.log(response.data[0].venue.city);
             var state = console.log(response.data[0].venue.region);
-            // locationArr.push(city, state);
-            // console.log(locationArr);
             // Event Date (using mm/dd/yyyy)
             var date = response.data[0].datetime;
             date = moment(new Date()).format("DD/MM/YYYY");
-            console.log(date);
+            
+            for (x in response){
+                console.log(concertArt, divider, venue, divider, city,
+                    divider, state, divider, date, divider);
+                return
+            }
         }
     );
 
@@ -118,22 +153,22 @@ function findConcert(userSearch){
 switch (command){
     case "concert-this":
     findConcert(userSearch);
-    console.log("Concert ");
+    console.log("Concert details: ");
     break;
 
     case "spotify-this-song":
     spotifySong(userSearch);
-    console.log("What song is this?");
+    console.log("Song info: ");
     break;
 
     case "movie-this":
     findMovie(userSearch);
-    console.log("Movie stats")
-    // movieInfo();
+    console.log("Movie info: ")
     break;
 
     case "do-what-it-says":
-    console.log("Nothing there");
+    spotifySong(userSearch);
+    console.log("The song is...");
     break;
 
     default: console.log("Nothing entered");
