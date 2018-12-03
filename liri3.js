@@ -30,17 +30,18 @@ function readRandom(){
         }
         // We will then print the contents of data
         var dataArr = data.split(",");
-        dataArr = (dataArr[1]);
-        userSearch = dataArr;
+        var readCommand = (dataArr[0]);
+        songArr = (dataArr[1]);
+        command = readCommand;
+        userSearch = songArr;
         // console.log(dataArr);
-        return;
+        // line 37 console.log reads correctly: I Want it That Way
 });
 };
 
 function spotifySong(userSearch){
 // start Spotify request
-    if (command = "do-what-it-says"){
-        readRandom();
+    if (command = "spotify-this-song"){
     }
 
     if (!userSearch){
@@ -114,25 +115,25 @@ axios.get(queryURL1).then(
 // BandsInTown Axios
 function findConcert(userSearch){
     if (!userSearch){
-        console.log("Go find yourself a Nickleback concert, you dweeb.");
+        console.log(divider,"Go find yourself a Nickleback concert, you dweeb.");
         return
     }
     // bandsintown queryURL/api
     var QueryURL2 = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
     axios.get(QueryURL2).then(
         function(response){
-            console.log(response.data[0])
-        // Here, add these points from the response object:
-            // Artist name
+            // console.log(response.data[0]);
+        // // Here, add these points from the response object:
+        //     // Artist name
             var concertArt = "Artist: " + response.data[0].lineup[0];
             // Venue Name
             var venue = "Venue: " + response.data[0].venue.name;
             // Venue location
-            var city = console.log(response.data[0].venue.city);
-            var state = console.log(response.data[0].venue.region);
+            var city = "City: " + (response.data[0].venue.city);
+            var state = "State: " + (response.data[0].venue.region);
             // Event Date (using mm/dd/yyyy)
             var date = response.data[0].datetime;
-            date = moment(new Date()).format("DD/MM/YYYY");
+            date = "Date: " + moment(new Date()).format("DD/MM/YYYY");
             
             for (x in response){
                 console.log(concertArt, divider, venue, divider, city,
@@ -167,9 +168,10 @@ switch (command){
     break;
 
     case "do-what-it-says":
+    readRandom();
     spotifySong(userSearch);
     console.log("The song is...");
     break;
 
-    default: console.log("Nothing entered");
+    default: console.log("Enter a command.");
 };
